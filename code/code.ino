@@ -20,78 +20,43 @@ int last_error;
 float led_brightness;
 
 
-const char PAGE[] PROGMEM = R"rawliteral(
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body { font-family: Arial; text-align: center; margin-top: 20px; }
-input { width: 90%; }
-button { padding: 10px 20px; font-size: 16px; margin: 10px; }
-</style>
-</head>
-<body>
-
-<h3>Kp</h3>
-<input type="range" min="-5" max="5" step="0.01" value="0"
-oninput="send('kp', this.value)">
-<p id="kpv">0</p>
-
-<h3>Ki</h3>
-<input type="range" min="-5" max="5" step="0.01" value="0"
-oninput="send('ki', this.value)">
-<p id="kiv">0</p>
-
-<h3>Kd</h3>
-<input type="range" min="-5" max="5" step="0.01" value="0"
-oninput="send('kd', this.value)">
-<p id="kdv">0</p>
-
-<hr>
-
-<h3>Command</h3>
-<input type="range" min="0" max="200" step="1" value="0"
-oninput="send('command', this.value)">
-<p id="commandv">0</p>
-
-<h3>Autotime (ms)</h3>
-<input type="range" min="0" max="5000" step="500" value="0"
-oninput="send('autotime', this.value)">
-<p id="autotimev">0</p>
-
-<hr>
-
-<h3>Auto Mode</h3>
-<button onclick="toggleAuto()">Toggle Auto</button>
-<p id="autov">0</p>
-
-<script>
-function send(name, val){
-  document.getElementById(name + "v").innerHTML = val;
-  fetch("/set?" + name + "=" + val);
-}
-
-// toggle auoto between 0 and 1
-function toggleAuto() {
-  let current = parseInt(document.getElementById('autov').innerHTML);
-  let newVal = current === 0 ? 1 : 0;
-  document.getElementById('autov').innerHTML = newVal;
-  fetch("/set?auoto=" + newVal);
-}
-</script>
-
-</body>
-</html>
-)rawliteral";
-
-
-void handleRoot() {
-  server.send(200, "text/html", PAGE);
-}
 
 int auoto=0;
 int autotime;
+void handleRoot() {
+  String page = "<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width, initial-scale=1'>"
+                "<style>body{font-family:Arial;text-align:center;margin-top:20px;}input{width:90%;}"
+                "button{padding:10px 20px;font-size:16px;margin:10px;}</style></head><body>";
+
+  page += "<h3>Kp</h3><input type='range' min='-5' max='5' step='0.01' value='" + String(kp) + "' oninput='send(\"kp\", this.value)'>";
+  page += "<p id='kpv'>" + String(kp) + "</p>";
+
+  page += "<h3>Ki</h3><input type='range' min='-5' max='5' step='0.01' value='" + String(ki) + "' oninput='send(\"ki\", this.value)'>";
+  page += "<p id='kiv'>" + String(ki) + "</p>";
+
+  page += "<h3>Kd</h3><input type='range' min='-5' max='5' step='0.01' value='" + String(kd) + "' oninput='send(\"kd\", this.value)'>";
+  page += "<p id='kdv'>" + String(kd) + "</p>";
+
+  page += "<hr><h3>Command</h3><input type='range' min='0' max='200' step='1' value='" + String(command) + "' oninput='send(\"command\", this.value)'>";
+  page += "<p id='commandv'>" + String(command) + "</p>";
+
+  page += "<h3>Autotime (ms)</h3><input type='range' min='0' max='5000' step='500' value='" + String(autotime) + "' oninput='send(\"autotime\", this.value)'>";
+  page += "<p id='autotimev'>" + String(autotime) + "</p>";
+
+  page += "<hr><h3>Auto Mode</h3><button onclick='toggleAuto()'>Toggle Auto</button>";
+  page += "<p id='autov'>" + String(auoto) + "</p>";
+
+  page += "<script>"
+          "function send(name,val){document.getElementById(name+'v').innerHTML=val;fetch('/set?'+name+'='+val);}"
+          "function toggleAuto(){let current=parseInt(document.getElementById('autov').innerHTML);"
+          "let newVal=current===0?1:0;document.getElementById('autov').innerHTML=newVal;"
+          "fetch('/set?auoto='+newVal);}"
+          "</script></body></html>";
+
+  server.send(200, "text/html", page);
+}
+
+
 
 void handleSet() {
   if (server.hasArg("kp")) kp = server.arg("kp").toFloat();
@@ -160,7 +125,7 @@ void loop() {
   delay(1);
   int ldrValue5 = analogRead(LDR_PIN);
   ldrValue = (ldrValue1 + ldrValue2 + ldrValue3 + ldrValue4 + ldrValue5)/5; 
-  
+
 
   calculate_pid();
   
