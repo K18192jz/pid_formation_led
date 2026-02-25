@@ -1,26 +1,151 @@
-uint8_t LDR_PIN=2;   // ADC pin
+#include <WiFi.h>
+#include <WebServer.h>
+
+const char* ssid = "ESP32_SLIDER";
+const char* password = "12345678";
+
+WebServer server(80);
+
+
+
+#define LDR_PIN 34 
 int command = 0;
 #define LED_PIN 23
 int ldrValue;
-float kp,ki,kd;
-int a=255;
-int b=0;
+volatile float kp,ki,kd;
+int a=255; // just for the serial ploter
+int b=0; // just for the serial ploter
 int error;
 int last_error;
 float led_brightness;
 
+
+const char PAGE[] PROGMEM = R"rawliteral(
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body { font-family: Arial; text-align: center; margin-top: 20px; }
+input { width: 90%; }
+button { padding: 10px 20px; font-size: 16px; margin: 10px; }
+</style>
+</head>
+<body>
+
+<h3>Kp</h3>
+<input type="range" min="-5" max="5" step="0.01" value="0"
+oninput="send('kp', this.value)">
+<p id="kpv">0</p>
+
+<h3>Ki</h3>
+<input type="range" min="-5" max="5" step="0.01" value="0"
+oninput="send('ki', this.value)">
+<p id="kiv">0</p>
+
+<h3>Kd</h3>
+<input type="range" min="-5" max="5" step="0.01" value="0"
+oninput="send('kd', this.value)">
+<p id="kdv">0</p>
+
+<hr>
+
+<h3>Command</h3>
+<input type="range" min="0" max="200" step="1" value="0"
+oninput="send('command', this.value)">
+<p id="commandv">0</p>
+
+<h3>Autotime (ms)</h3>
+<input type="range" min="0" max="5000" step="500" value="0"
+oninput="send('autotime', this.value)">
+<p id="autotimev">0</p>
+
+<hr>
+
+<h3>Auto Mode</h3>
+<button onclick="toggleAuto()">Toggle Auto</button>
+<p id="autov">0</p>
+
+<script>
+function send(name, val){
+  document.getElementById(name + "v").innerHTML = val;
+  fetch("/set?" + name + "=" + val);
+}
+
+// toggle auoto between 0 and 1
+function toggleAuto() {
+  let current = parseInt(document.getElementById('autov').innerHTML);
+  let newVal = current === 0 ? 1 : 0;
+  document.getElementById('autov').innerHTML = newVal;
+  fetch("/set?auoto=" + newVal);
+}
+</script>
+
+</body>
+</html>
+)rawliteral";
+
+
+void handleRoot() {
+  server.send(200, "text/html", PAGE);
+}
+
+int auoto=0;
+int autotime;
+
+void handleSet() {
+  if (server.hasArg("kp")) kp = server.arg("kp").toFloat();
+  if (server.hasArg("ki")) ki = server.arg("ki").toFloat();
+  if (server.hasArg("kd")) kd = server.arg("kd").toFloat();
+
+  if (server.hasArg("command")) command = server.arg("command").toInt();
+  if (server.hasArg("auoto")) auoto = server.arg("auoto").toInt();
+  if (server.hasArg("autotime")) autotime = server.arg("autotime").toInt();
+
+  server.send(200, "text/plain", "OK");
+}
+
+
+
 void setup() {
   pinMode(LED_PIN, OUTPUT);
+  
   Serial.begin(115200);
+
+  WiFi.softAP(ssid, password);
+
+  server.on("/", handleRoot);
+  server.on("/set", handleSet);
+  server.begin();
+
 
   kp=0.6;
   ki=0.35;
   kd=0.01;
 }
+unsigned long tim;
+int vz=0;
 
 void loop() {
+  if (auoto == 1){
+  if (millis() - tim > autotime && vz==0){
+  command=0;
+  tim = millis();
+  vz=1;
+  }
+  if (millis() - tim > autotime && vz==1){
+  command=100;
+  tim = millis();
+  vz=2;
+  }
+  if (millis() - tim > autotime && vz==2){
+  command=200;
+  tim = millis();
+  vz=0;
+  }}
 
   readSerialCommand();   
+  server.handleClient();   // non-blocking
 
 
 
@@ -105,3 +230,12 @@ void readSerialCommand() {
     }
   }
 }
+
+/*
+#include <stdio.h>
+
+int main() {
+    printf("Hello, world!\n");
+    return 0;
+}
+    */
