@@ -1733,8 +1733,19 @@
 		)
 		(embedded_fonts no)
 	)
+	(gr_rect
+		(start 110.4 42.1)
+		(end 170.4 98)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "Edge.Cuts")
+		(uuid "3cac98d5-3102-440e-8579-81a230d9922b")
+	)
 	(gr_text "esp32"
-		(at 141 57.9 0)
+		(at 146.3 56.5 0)
 		(layer "F.Cu")
 		(uuid "bf0c8264-af13-44b7-aa27-2a363ac19f9c")
 		(effects
@@ -1743,7 +1754,7 @@
 				(thickness 0.3)
 				(bold yes)
 			)
-			(justify left bottom)
+			(justify left bottom mirror)
 		)
 	)
 	(segment
