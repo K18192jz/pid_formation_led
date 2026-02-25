@@ -150,8 +150,17 @@ void loop() {
 
 
   
-  ldrValue = analogRead(LDR_PIN);
-
+  int ldrValue1 = analogRead(LDR_PIN);
+  delay(1);
+  int ldrValue2 = analogRead(LDR_PIN);
+  delay(1);
+  int ldrValue3 = analogRead(LDR_PIN);
+  delay(1);
+  int ldrValue4 = analogRead(LDR_PIN);
+  delay(1);
+  int ldrValue5 = analogRead(LDR_PIN);
+  ldrValue = (ldrValue1 + ldrValue2 + ldrValue3 + ldrValue4 + ldrValue5)/5; 
+  
 
   calculate_pid();
   
@@ -170,7 +179,7 @@ void loop() {
   Serial.print(kd);
   Serial.print("     ");
   Serial.println(ldrValue);
-  delay(5);
+
 
   last_error=error;
 }
