@@ -84,9 +84,9 @@ void setup() {
   server.begin();
 
 
-  kp=0.0066;
-  ki=1.014;
-  kd=-0.0000032;
+  kp=0.6;
+  ki=0.35;
+  kd=0.01;
 }
 unsigned long tim;
 int vz=0;
@@ -114,20 +114,17 @@ void loop() {
 
 
 
-  
-  int ldrValue1 = analogRead(LDR_PIN);
-  delay(1);
-  int ldrValue2 = analogRead(LDR_PIN);
-  delay(1);
-  int ldrValue3 = analogRead(LDR_PIN);
-  delay(1);
-  int ldrValue4 = analogRead(LDR_PIN);
-  delay(1);
-  int ldrValue5 = analogRead(LDR_PIN);
-  ldrValue = (ldrValue1 + ldrValue2 + ldrValue3 + ldrValue4 + ldrValue5)/5; 
+  ldrValue = analogRead(LDR_PIN);
 
 
-  calculate_pid();
+  if(ldrValue < command){
+    digitalWrite(LED_PIN,HIGH);
+  }
+  else {
+    digitalWrite(LED_PIN,LOW);
+  }
+
+  //calculate_pid();
   
   Serial.print(a);
   Serial.print("     ");
@@ -146,7 +143,7 @@ void loop() {
   Serial.println(ldrValue);
 
 
-  last_error=error;
+  //last_error=error;
 }
 
 
@@ -161,7 +158,7 @@ void calculate_pid(){
   int D = error - last_error;
   led_brightness = (float) (P*kp) + (I*ki) + (D*kd);
 
-  if (led_brightness < 10) led_brightness=0;
+  if (led_brightness < 70) led_brightness=0;
   if (led_brightness > 255) led_brightness=255;
 
   analogWrite(LED_PIN, led_brightness);  

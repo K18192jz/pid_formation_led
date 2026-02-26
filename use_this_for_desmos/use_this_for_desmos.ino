@@ -84,9 +84,9 @@ void setup() {
   server.begin();
 
 
-  kp=0.0066;
-  ki=1.014;
-  kd=-0.0000032;
+  kp=0.6;
+  ki=0.35;
+  kd=0.01;
 }
 unsigned long tim;
 int vz=0;
@@ -125,26 +125,15 @@ void loop() {
   delay(1);
   int ldrValue5 = analogRead(LDR_PIN);
   ldrValue = (ldrValue1 + ldrValue2 + ldrValue3 + ldrValue4 + ldrValue5)/5; 
+  delay(21);
 
-
-  calculate_pid();
+ // calculate_pid();
   
-  Serial.print(a);
-  Serial.print("     ");
-  Serial.print(b);
-  Serial.print("     ");
-  Serial.print(command);
-  Serial.print("     ");
-  Serial.print(led_brightness);
-  Serial.print("     ");
-  Serial.print(kp);
-  Serial.print("     ");
-  Serial.print(ki);
-  Serial.print("     ");
-  Serial.print(kd);
-  Serial.print("     ");
-  Serial.println(ldrValue);
-
+  analogWrite(LED_PIN, command);  
+  
+  
+  Serial.print(ldrValue);
+  Serial.print(",");
 
   last_error=error;
 }
