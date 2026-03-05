@@ -1280,10 +1280,22 @@
 		)
 	)
 	(junction
+		(at 66.04 95.25)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "402eb7e8-adf6-49f2-b327-8502e67c9d80")
+	)
+	(junction
 		(at 74.93 110.49)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "ae81b592-1f4b-460c-855c-8f4f18aac888")
+	)
+	(junction
+		(at 73.66 95.25)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "ee4fb636-bf0e-4a27-b838-3b7b0a38d781")
 	)
 	(no_connect
 		(at 135.89 102.87)
@@ -1383,6 +1395,16 @@
 	)
 	(wire
 		(pts
+			(xy 66.04 83.82) (xy 66.04 95.25)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3a64976a-5cba-4108-821f-17dd9084b277")
+	)
+	(wire
+		(pts
 			(xy 74.93 110.49) (xy 78.74 110.49)
 		)
 		(stroke
@@ -1450,6 +1472,16 @@
 			(type default)
 		)
 		(uuid "7f149fa9-256f-401a-ad9d-bd1cfd32b0d6")
+	)
+	(wire
+		(pts
+			(xy 73.66 83.82) (xy 73.66 95.25)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "83edffa9-84f0-4e42-bf47-1205b7a5917a")
 	)
 	(wire
 		(pts
@@ -2110,6 +2142,83 @@
 			(project ""
 				(path "/d402f5bd-ed8e-4851-8b19-b2cff888d33d"
 					(reference "R3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:LED")
+		(at 69.85 83.82 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "8dd3bab4-a0a9-441a-8a89-efc790bbdc5e")
+		(property "Reference" "D2"
+			(at 68.2625 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "LED"
+			(at 68.2625 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "LED_THT:LED_D1.8mm_W3.3mm_H2.4mm"
+			(at 69.85 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 69.85 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Light emitting diode"
+			(at 69.85 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 69.85 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "71859da3-74d2-418e-9ff1-6417b2c6c217")
+		)
+		(pin "1"
+			(uuid "8c94b44b-b17b-46fb-a83f-b32ae1cb8da0")
+		)
+		(instances
+			(project "the_main_pcb"
+				(path "/d402f5bd-ed8e-4851-8b19-b2cff888d33d"
+					(reference "D2")
 					(unit 1)
 				)
 			)
