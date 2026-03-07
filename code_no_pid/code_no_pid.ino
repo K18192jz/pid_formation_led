@@ -28,15 +28,6 @@ void handleRoot() {
                 "<style>body{font-family:Arial;text-align:center;margin-top:20px;}input{width:90%;}"
                 "button{padding:10px 20px;font-size:16px;margin:10px;}</style></head><body>";
 
-  page += "<h3>Kp</h3><input type='range' min='-5' max='5' step='0.01' value='" + String(kp) + "' oninput='send(\"kp\", this.value)'>";
-  page += "<p id='kpv'>" + String(kp) + "</p>";
-
-  page += "<h3>Ki</h3><input type='range' min='-5' max='5' step='0.01' value='" + String(ki) + "' oninput='send(\"ki\", this.value)'>";
-  page += "<p id='kiv'>" + String(ki) + "</p>";
-
-  page += "<h3>Kd</h3><input type='range' min='-5' max='5' step='0.01' value='" + String(kd) + "' oninput='send(\"kd\", this.value)'>";
-  page += "<p id='kdv'>" + String(kd) + "</p>";
-
   page += "<hr><h3>Command</h3><input type='range' min='0' max='200' step='1' value='" + String(command) + "' oninput='send(\"command\", this.value)'>";
   page += "<p id='commandv'>" + String(command) + "</p>";
 
@@ -59,9 +50,7 @@ void handleRoot() {
 
 
 void handleSet() {
-  if (server.hasArg("kp")) kp = server.arg("kp").toFloat();
-  if (server.hasArg("ki")) ki = server.arg("ki").toFloat();
-  if (server.hasArg("kd")) kd = server.arg("kd").toFloat();
+  
 
   if (server.hasArg("command")) command = server.arg("command").toInt();
   if (server.hasArg("auoto")) auoto = server.arg("auoto").toInt();
@@ -91,7 +80,9 @@ void setup() {
 unsigned long tim;
 int vz=0;
 
+
 void loop() {
+  ////////////////////////////////////////// this is used for outochanging the command (set_point)///////////////////////////////////////////////////////////////
   if (auoto == 1){
   if (millis() - tim > autotime && vz==0){
   command=0;
@@ -109,12 +100,18 @@ void loop() {
   vz=0;
   }}
 
+
+  //////////////////////////////////////////////////////  reading the commaned values from serial monitor and wifi////////////////////////////////////////////////
   readSerialCommand();   
   server.handleClient();   // non-blocking
 
 
-
+  //////////////////////////////////////////  read the values ////////////////////////////////////////////////
   ldrValue = analogRead(LDR_PIN);
+  
+   
+
+
 
 
   if(ldrValue < command){

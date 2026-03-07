@@ -91,7 +91,11 @@ void setup() {
 unsigned long tim;
 int vz=0;
 
+
+
+
 void loop() {
+  ////////////////////////////////////////// this is used for outochanging the command (set_point)///////////////////////////////////////////////////////////////
   if (auoto == 1){
   if (millis() - tim > autotime && vz==0){
   command=0;
@@ -109,12 +113,20 @@ void loop() {
   vz=0;
   }}
 
+
+
+
+
+  //////////////////////////////////////////////////////  reading the commaned values from serial monitor and wifi////////////////////////////////////////////////
   readSerialCommand();   
-  server.handleClient();   // non-blocking
+  server.handleClient();   
 
 
 
-  
+
+
+
+  //////////////////////////////////////////  simple filter to make the vallues better and make the system more stable////////////////////////////////////////////////
   int ldrValue1 = analogRead(LDR_PIN);
   delay(1);
   int ldrValue2 = analogRead(LDR_PIN);
@@ -127,8 +139,14 @@ void loop() {
   ldrValue = (ldrValue1 + ldrValue2 + ldrValue3 + ldrValue4 + ldrValue5)/5; 
 
 
+  
+  
+  //////////////////////////////////////////////////////  the function to do the PID calculations ////////////////////////////////////////////////
   calculate_pid();
   
+
+
+  ////////////////////////////////////////////////////////  this is used to display the vallues  //////////////////////////////////////////////
   Serial.print(a);
   Serial.print("     ");
   Serial.print(b);
@@ -153,6 +171,9 @@ void loop() {
 
 
 
+
+
+
 int I;
 void calculate_pid(){
   error = command - ldrValue;
@@ -161,7 +182,10 @@ void calculate_pid(){
   int D = error - last_error;
   led_brightness = (float) (P*kp) + (I*ki) + (D*kd);
 
-  if (led_brightness < 10) led_brightness=0;
+
+
+  // use this to limit the values 
+  if (led_brightness < 30) led_brightness=0;
   if (led_brightness > 255) led_brightness=255;
 
   analogWrite(LED_PIN, led_brightness);  
