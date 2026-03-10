@@ -185,7 +185,7 @@ void calculate_pid(){
 
 
   // use this to limit the values 
-  if (led_brightness < 30) led_brightness=0;
+  if (led_brightness < 37) led_brightness=0;
   if (led_brightness > 255) led_brightness=255;
 
   analogWrite(LED_PIN, led_brightness);  
